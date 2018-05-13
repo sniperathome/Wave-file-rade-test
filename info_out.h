@@ -2,9 +2,9 @@
 #include <string.h>
 #include "wave.h"
 
-#define MAXHEADSIZE 128 //ÎÄ¼ş¶ÁÈ¡»º´æ
+#define MAXHEADSIZE 128 //æ–‡ä»¶è¯»å–ç¼“å­˜å¤§å°
 
-/*´íÎóIDÉè¶¨*/
+/*é”™è¯¯IDè®¾å®š*/
 #define errID_UnKErr 0
 #define errID_FileErr 1
 #define errID_TypeErr 2
@@ -16,13 +16,13 @@ char *errStr[] =
         "File was not a WAVE file",
         "Can not decode format"};
 
-int err(const int errID) //´íÎó´¦Àí
+int err(const int errID) //é”™è¯¯å¤„ç†
 {
     puts(errStr[errID]);
     return errID;
 }
 
-int chkID(const char id[4]) //¼ì²éCHUNKID
+int chkID(const char id[4]) //æ£€æŸ¥CHUNKID
 {
     int i = 0;
     int j = 0;
@@ -56,7 +56,7 @@ int chkID(const char id[4]) //¼ì²éCHUNKID
     return -1;
 }
 
-void *readWaveHead(const char *path) //ÎÄ¼şÍ·¶ÁÈ¡
+void *readWaveHead(const char *path) //æ–‡ä»¶å¤´è¯»å–
 {
     FILE *fp = NULL;
     BYTE *cache = NULL;
@@ -77,7 +77,7 @@ void *readWaveHead(const char *path) //ÎÄ¼şÍ·¶ÁÈ¡
     fread(cache, sizeof(char), MAXHEADSIZE, fp);
     pHEAD = (WAVE_RIFF_CHUNK *)cache;
     pFMT = (WAVE_FMT_CHUNK *)(cache + sizeof(WAVE_RIFF_CHUNK));
-    if ((chkID(pHEAD->strRiffID) != 0) || (chkID(pHEAD->strRiffType) != 1)) //ÎÄ¼şÍ·¼ì²é
+    if ((chkID(pHEAD->strRiffID) != 0) || (chkID(pHEAD->strRiffType) != 1)) //æ–‡ä»¶å¤´æ£€æŸ¥
     {
         err(errID_TypeErr);
         free(cache);
@@ -90,7 +90,7 @@ void *readWaveHead(const char *path) //ÎÄ¼şÍ·¶ÁÈ¡
     HEAD_LEN = HEAD_LEN + sizeof(WAVE_RIFF_CHUNK) + pFMT->dwFmtSize + 8;
 
     pFACT = (WAVE_FACT_CHUNK *)(cache + HEAD_LEN);
-    if (chkID(pFACT->strFactID) != 3) //FACT¼ì²é
+    if (chkID(pFACT->strFactID) != 3) //FACTæ£€æŸ¥
     {
         if (4 == chkID(pFACT->strFactID)) //Not have FACT
         {
@@ -141,7 +141,7 @@ void *readWaveHead(const char *path) //ÎÄ¼şÍ·¶ÁÈ¡
     return waveHead;
 }
 
-int putnc(const int n, const char c) //×Ö·ûÖØ¸´Êä³ö
+int putnc(const int n, const char c) //å­—ç¬¦é‡å¤è¾“å‡º
 {
     int i;
     for (i = 0; i < n; i++)
@@ -151,7 +151,7 @@ int putnc(const int n, const char c) //×Ö·ûÖØ¸´Êä³ö
     return n;
 }
 
-void readID(const char src[], char dts[], const int n) //¶ÁÈ¡chunkID
+void readID(const char src[], char dts[], const int n) //è¯»å–chunkID
 {
     int i = 0;
     for (i = 0; i < n; i++)
@@ -161,7 +161,7 @@ void readID(const char src[], char dts[], const int n) //¶ÁÈ¡chunkID
     dts[i] = '\0';
 }
 
-void getCodeFmtbyName(const DWORD tag, char *dst) //¶ÁÈ¡±àÂë¸ñÊ½´úÂë¶ÔÓ¦µÄ±àÂëÃû³Æ
+void getCodeFmtbyName(const DWORD tag, char *dst) //è¯»å–ç¼–ç æ ¼å¼ä»£ç å¯¹åº”çš„ç¼–ç åç§°
 {
     int i = 0;
     for (i = 0; i < 104; i++)
@@ -194,14 +194,14 @@ void labPrint(const char *labName, const char *labData, const unsigned short lab
         {{1, 16, 31, 30},
          {2, 16, 128, 142},
          {2, 128, 112, 116},
-         {2, 112, 96, 105}};
+         {2, 112, 96, 105}};//labç­‰çº§æ ·å¼
 
     hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     GetConsoleScreenBufferInfo(hOut, &csbiInfo);
     wOldatt = csbiInfo.wAttributes;
     w = csbiInfo.dwSize.X - 24;
     putnc(8, ' ');
-    for (i = 0; lablevel >= i; i++) //×ó±ß
+    for (i = 0; lablevel >= i; i++) //å·¦è¾¹
     {
         SetConsoleTextAttribute(hOut, styleList[i].bg);
         putnc(styleList[i].tab, ' ');
@@ -217,7 +217,7 @@ void labPrint(const char *labName, const char *labData, const unsigned short lab
     {
         putnc(w - pn, ' ');
     }
-    for (i = lablevel; i >= 0; i--) //ÓÒ±ß
+    for (i = lablevel; i >= 0; i--) //å³è¾¹
     {
         SetConsoleTextAttribute(hOut, styleList[i].bg);
         putnc(styleList[i].tab, ' ');
@@ -265,7 +265,7 @@ void hexPrint(const BYTE * data,const unsigned int len)
     SetConsoleTextAttribute(hOut,wOldatt);
 }
 
-int printWaveHead(const void *phead) //Êä³öweavÍ·ĞÅÏ¢
+int printWaveHead(const void *phead) //è¾“å‡ºweavå¤´ä¿¡æ¯
 {
     WAVE_RIFF_CHUNK *pRiff = NULL;
     WAVE_FMT_CHUNK *pFmt = NULL;
@@ -291,18 +291,18 @@ int printWaveHead(const void *phead) //Êä³öweavÍ·ĞÅÏ¢
     sprintf(strcahe, "%lu bytes", pFmt->dwFmtSize);
     labPrint("Size", strcahe, 2);
     getCodeFmtbyName(pFmt->wavFormat.wFormatTag, strcahe);
-    labPrint("±àÂë¸ñÊ½", strcahe, 2);
-    sprintf(strcahe, "%d Í¨µÀ", pFmt->wavFormat.wChannels);
-    labPrint("Í¨µÀÊıÁ¿", strcahe, 2);
-    sprintf(strcahe, "%d Ñù±¾/Ãë", pFmt->wavFormat.dwSamplesPerSec);
-    labPrint("  ²ÉÑùÂÊ", strcahe, 2);
-    sprintf(strcahe, "%d ×Ö½Ú/Ãë", pFmt->wavFormat.dwAvgBytesPerSec);
-    labPrint("Æ½¾ùÂëÂÊ", strcahe, 2);
+    labPrint("ç¼–ç æ ¼å¼", strcahe, 2);
+    sprintf(strcahe, "%d é€šé“", pFmt->wavFormat.wChannels);
+    labPrint("é€šé“æ•°é‡", strcahe, 2);
+    sprintf(strcahe, "%lu æ ·æœ¬/ç§’", pFmt->wavFormat.dwSamplesPerSec);
+    labPrint("  é‡‡æ ·ç‡", strcahe, 2);
+    sprintf(strcahe, "%lu å­—èŠ‚/ç§’", pFmt->wavFormat.dwAvgBytesPerSec);
+    labPrint("å¹³å‡ç ç‡", strcahe, 2);
     sprintf(
-        strcahe, "%d ×Ö½Ú£¨²ÉÑù¾«¶È£º%d bit£©",
+        strcahe, "%d å­—èŠ‚ï¼ˆé‡‡æ ·ç²¾åº¦ï¼š%d bitï¼‰",
         pFmt->wavFormat.wBlockAlign,
         pFmt->wavFormat.wBlockAlign * 8 / pFmt->wavFormat.wChannels);
-    labPrint("Ñù±¾´óĞ¡", strcahe, 2);
+    labPrint("æ ·æœ¬å¤§å°", strcahe, 2);
     labClose(2);
     putchar('\n');
 
@@ -320,3 +320,4 @@ int printWaveHead(const void *phead) //Êä³öweavÍ·ĞÅÏ¢
     }
     return HEAD_LEN;
 }
+
