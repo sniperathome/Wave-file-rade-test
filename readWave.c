@@ -2,15 +2,22 @@
 #include <stdlib.h>
 #include "info_out.h"
 
-int main()
+int main(int argc,char* argv[])
 {
     char *strPath;
     void *head;
     char exitf;
     while (1)
     {
-        puts("Please input the .wav file name\n");
-        scanf("%s", strPath);
+        if (2 == argc)
+        {
+            strPath = argv[1];
+        }
+        else
+        {
+            puts("Please input the .wav file name\n");
+            scanf("%s", strPath);
+        }
         head = readWaveHead(strPath);
         if (head != NULL)
         {
@@ -25,3 +32,4 @@ int main()
     }
     return 0;
 }
+
