@@ -56,7 +56,7 @@ int chkID(const char id[4]) //检查CHUNKID
     return -1;
 }
 
-void *readWaveHead(const char *path) //文件头读取
+void* readWaveHead(const char *path) //文件头读取
 {
     FILE *fp = NULL;
     BYTE *cache = NULL;
@@ -119,7 +119,7 @@ void *readWaveHead(const char *path) //文件头读取
     if (HEAD_LEN > 38)
     {
         memcpy((int *)waveHead + 1, cache, 20 + pFMT->dwFmtSize + 8);
-        pTemp = (char *)waveHead + sizeof(int);
+        pTemp = (BYTE *)waveHead + sizeof(int);
         pTemp += (20 + pFMT->dwFmtSize);
         pTemp += (8 + sizeof(int *));
         memcpy(pTemp, (char *)cache + (20 + pFMT->dwFmtSize + 8), pFACT->dwFactSize);
@@ -194,13 +194,14 @@ void labPrint(const char *labName, const char *labData, const unsigned short lab
         {{1, 16, 31, 30},
          {2, 16, 128, 142},
          {2, 128, 112, 116},
-         {2, 112, 96, 105}};//lab等级样式
+         {2, 112, 96, 105}};
 
     hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     GetConsoleScreenBufferInfo(hOut, &csbiInfo);
     wOldatt = csbiInfo.wAttributes;
     w = csbiInfo.dwSize.X - 24;
-    putnc(8, ' ');
+    m = (csbiInfo.dwSize.X - w)/2;
+    putnc(m, ' ');
     for (i = 0; lablevel >= i; i++) //左边
     {
         SetConsoleTextAttribute(hOut, styleList[i].bg);
