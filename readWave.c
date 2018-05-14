@@ -1,22 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "info_out.h"
+#define MAXPATH 26
 
 int main(int argc,char* argv[])
 {
-    char *strPath;
-    void *head;
-    char exitf;
+    char strPath[MAXPATH];
+    void *head = NULL;
+    char exitf = ' ';
     while (1)
     {
-        if (2 == argc)
+        if (2 == argc && (strlen(argv[1])+1 <= MAXPATH))
         {
-            strPath = argv[1];
+            sprintf(strPath,"%s",argv[1]);                
         }
         else
         {
-            puts("Please input the .wav file name\n");
-            scanf("%s", strPath);
+            fflush(stdin);
+        	puts("Please input the .wav file name\n");
+        	scanf("%[^\n]", strPath);
+            fflush(stdin);
+            strPath[MAXPATH-1] = '\0';
         }
         head = readWaveHead(strPath);
         if (head != NULL)
