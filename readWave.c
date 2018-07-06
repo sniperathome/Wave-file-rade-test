@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "info_out.h"
-#define MAXPATH 26
+#define MAXPATH 128
 
 int main(int argc,char* argv[])
 {
